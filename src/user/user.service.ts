@@ -44,6 +44,18 @@ export class UsersService {
     return user;
   }
 
+  async findOneByUsername(username: string): Promise<User> {
+    const user = await this.usersRepository.findOne({
+      where: { username },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
+    }
+
+    return user;
+  }
+
   // UPDATE
   async update(id: number, body: any): Promise<User> {
     const user = await this.findOne(id);
@@ -66,4 +78,8 @@ export class UsersService {
       message: `User with id ${id} was deleted successfully`,
     };
   }
+
+  
 }
+
+

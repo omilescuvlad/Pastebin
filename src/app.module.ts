@@ -7,20 +7,18 @@ import { UsersModule } from './user/user.module';
 import { Paste } from './paste/paste.entity';
 import { PastesModule } from './paste/paste.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 
-import { UsersController } from './user/user.controller';
-import { PastesController } from './paste/paste.controller';
-
 //dotenv
-dotenv.config();
-@Module({
-  imports: [ConfigModule.forRoot()],
-})
+dotenv.config({ path: '.env' });
 
 //database connection
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -34,6 +32,7 @@ dotenv.config();
     }),
     UsersModule,
     PastesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

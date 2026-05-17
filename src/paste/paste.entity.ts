@@ -16,6 +16,6 @@ export class Paste {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @ManyToOne(type => User, user => user.pastes)
+  @ManyToOne(() => User, user => user.pastes)
   user: User;
 }
