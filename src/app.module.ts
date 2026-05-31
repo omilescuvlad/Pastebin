@@ -9,6 +9,8 @@ import { PastesModule } from './paste/paste.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
+import { RolesGuard } from './enums/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 //dotenv
 dotenv.config({ path: '.env' });
@@ -35,7 +37,10 @@ dotenv.config({ path: '.env' });
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  }] ,
 })
 export class AppModule {}
 
