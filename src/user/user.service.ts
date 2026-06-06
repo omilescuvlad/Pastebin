@@ -1,4 +1,3 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,7 +11,6 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  
   // CREATE
   async create(body: any): Promise<User> {
     const salt = await bcrypt.genSalt();
@@ -67,7 +65,9 @@ export class UsersService {
     user.fullName = body.fullName ?? user.fullName;
     user.username = body.username ?? user.username;
     const salt = await bcrypt.genSalt();
-    user.password = body.password ? await bcrypt.hash(body.password, salt) : user.password;
+    user.password = body.password
+      ? await bcrypt.hash(body.password, salt)
+      : user.password;
     user.email = body.email ?? user.email;
 
     return this.usersRepository.save(user);
@@ -83,8 +83,4 @@ export class UsersService {
       message: `User with id ${id} was deleted successfully`,
     };
   }
-
-  
 }
-
-

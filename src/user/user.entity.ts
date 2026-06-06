@@ -19,7 +19,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @OneToMany(() => Paste, paste => paste.user)
+  @OneToMany(() => Paste, (paste) => paste.user)
   pastes: Paste[];
 
   @Column({

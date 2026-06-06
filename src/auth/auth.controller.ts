@@ -1,4 +1,3 @@
-
 import {
   Body,
   Controller,
@@ -7,7 +6,7 @@ import {
   HttpStatus,
   Post,
   Request,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';

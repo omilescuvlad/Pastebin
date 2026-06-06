@@ -1,4 +1,3 @@
-
 import { User } from 'src/user/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
@@ -16,6 +15,6 @@ export class Paste {
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.pastes)
+  @ManyToOne(() => User, (user) => user.pastes)
   user: User;
 }

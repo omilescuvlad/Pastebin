@@ -38,10 +38,7 @@ export class PastesController {
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @Roles(Role.Admin, Role.User)
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() body: any,
-  ) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
     return this.pastesService.update(id, body);
   }
 
