@@ -18,7 +18,8 @@ export class AuthService {
     const user = await this.usersService.findOneByUsername(username);
     const salt = await bcrypt.genSalt();
     const hash = await bcrypt.hash(pass, salt);
-    const isPasswordValid = await bcrypt.compare(hash, user.password);
+    const isPasswordValid = await bcrypt.compare(pass, user.password);
+
     if (!isPasswordValid) {
       throw new UnauthorizedException();
     }

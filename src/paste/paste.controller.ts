@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   UseGuards,
+  StreamableFile,
 } from '@nestjs/common';
 import { PastesService } from './paste.service';
 import { Roles } from 'src/enums/roles.decorator';
@@ -20,9 +21,7 @@ export class PastesController {
   constructor(private readonly pastesService: PastesService) {}
 
   // CREATE paste
-  @UseGuards(AuthGuard, RolesGuard)
   @Post()
-  @Roles(Role.Admin, Role.User)
   create(@Body() body: any) {
     return this.pastesService.create(body);
   }
@@ -52,5 +51,15 @@ export class PastesController {
   @Roles(Role.Admin, Role.User)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.pastesService.remove(id);
+  }
+
+  //DOWNLOAD paste content as file
+  @UseGuards(AuthGuard, RolesGuard)
+  @Get(':id/download')
+  @Roles(Role.Admin, Role.User)
+  async download(@Param('id', ParseIntPipe) id: number) {
+    const paste = await this.pastesService.findOne(id);
+    const file = Buffer.from(paste.content, 'utf-8');
+    return new StreamableFile(file);
   }
 }
