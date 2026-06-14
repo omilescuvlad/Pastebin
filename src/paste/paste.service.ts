@@ -6,6 +6,9 @@ import { Paste } from './paste.entity';
 import { User } from '../user/user.entity';
 import { MailService } from '../mail/mail.service';
 
+import { CreatePasteDto } from './dto/create-paste.dto';
+import { UpdatePasteDto } from './dto/update-paste.dto';
+
 @Injectable()
 export class PastesService {
   constructor(
@@ -19,7 +22,7 @@ export class PastesService {
   ) {}
 
   // CREATE
-  async create(body: any): Promise<Paste> {
+  async create(body: CreatePasteDto): Promise<Paste> {
     const user = await this.usersRepository.findOne({
       where: { id: body.userId },
     });
@@ -63,7 +66,7 @@ export class PastesService {
   }
 
   // UPDATE
-  async update(id: number, body: any): Promise<Paste> {
+  async update(id: number, body: UpdatePasteDto): Promise<Paste> {
     const paste = await this.findOne(id);
 
     paste.content = body.content ?? paste.content;

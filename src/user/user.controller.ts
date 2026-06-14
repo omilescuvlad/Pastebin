@@ -14,16 +14,18 @@ import { Role } from '../enums/role.enum';
 import { Roles } from '../enums/roles.decorator';
 import { RolesGuard } from '../enums/roles.guard';
 import { AuthGuard } from '../auth/auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() body: any) {
+  create(@Body() body: CreateUserDto) {
     return this.usersService.create(body);
   }
-  
+
   @Get('unsubscribe/:token')
   unsubscribe(@Param('token') token: string) {
     return this.usersService.unsubscribe(token);
@@ -39,7 +41,7 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @Roles(Role.Admin)
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateUserDto) {
     return this.usersService.update(id, body);
   }
 

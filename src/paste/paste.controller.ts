@@ -17,6 +17,8 @@ import { Role } from '../enums/role.enum';
 import { RolesGuard } from '../enums/roles.guard';
 import { AuthGuard } from '../auth/auth.guard';
 import type { Response } from 'express';
+import { CreatePasteDto } from './dto/create-paste.dto';
+import { UpdatePasteDto } from './dto/update-paste.dto';
 
 @Controller('pastes')
 export class PastesController {
@@ -24,7 +26,7 @@ export class PastesController {
 
   // CREATE paste
   @Post()
-  create(@Body() body: any) {
+  create(@Body() body: CreatePasteDto) {
     return this.pastesService.create(body);
   }
 
@@ -40,7 +42,7 @@ export class PastesController {
   @UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @Roles(Role.Admin, Role.User)
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdatePasteDto) {
     return this.pastesService.update(id, body);
   }
 

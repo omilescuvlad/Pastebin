@@ -15,8 +15,6 @@ export class AuthService {
     pass: string,
   ): Promise<{ access_token: string }> {
     const user = await this.usersService.findOneByUsername(username);
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(pass, salt);
     const isPasswordValid = await bcrypt.compare(pass, user.password);
 
     if (!isPasswordValid) {

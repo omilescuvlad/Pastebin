@@ -7,10 +7,7 @@ import { User } from '../user/user.entity';
 import { MailModule } from '../mail/mail.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User, Paste]), 
-    MailModule
-  ],
+  imports: [TypeOrmModule.forFeature([User, Paste]), MailModule],
   providers: [PastesService],
   controllers: [PastesController],
   exports: [PastesService],
