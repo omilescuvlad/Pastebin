@@ -9,12 +9,14 @@ import {
   Put,
   UseGuards,
   StreamableFile,
+  Res,
 } from '@nestjs/common';
 import { PastesService } from './paste.service';
-import { Roles } from 'src/enums/roles.decorator';
-import { Role } from 'src/enums/role.enum';
-import { RolesGuard } from 'src/enums/roles.guard';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Roles } from '../enums/roles.decorator';
+import { Role } from '../enums/role.enum';
+import { RolesGuard } from '../enums/roles.guard';
+import { AuthGuard } from '../auth/auth.guard';
+import type { Response } from 'express';
 
 @Controller('pastes')
 export class PastesController {
@@ -51,12 +53,20 @@ export class PastesController {
   }
 
   //DOWNLOAD paste content as file
-  @UseGuards(AuthGuard, RolesGuard)
   @Get(':id/download')
-  @Roles(Role.Admin, Role.User)
-  async download(@Param('id', ParseIntPipe) id: number) {
+  async download(
+    @Param('id', ParseIntPipe) id: number,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const paste = await this.pastesService.findOne(id);
+
     const file = Buffer.from(paste.content, 'utf-8');
+
+    res.set({
+      'Content-Type': 'text/plain',
+      'Content-Disposition': `attachment; filename="paste-${paste.id}.txt"`,
+    });
+
     return new StreamableFile(file);
   }
 }

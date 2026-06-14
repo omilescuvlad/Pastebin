@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Paste } from './paste.entity';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class PastesService {
@@ -13,6 +14,8 @@ export class PastesService {
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+
+    private readonly mailService: MailService,
   ) {}
 
   // CREATE
@@ -31,7 +34,11 @@ export class PastesService {
       user: user,
     });
 
-    return this.pastesRepository.save(paste);
+    const savedPaste = await this.pastesRepository.save(paste);
+
+    await this.mailService.sendPasteCreatedEmail(user, savedPaste);
+
+    return savedPaste;
   }
 
   // READ ALL

@@ -10,10 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './user.service';
-import { Role } from 'src/enums/role.enum';
-import { Roles } from 'src/enums/roles.decorator';
-import { RolesGuard } from 'src/enums/roles.guard';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { Role } from '../enums/role.enum';
+import { Roles } from '../enums/roles.decorator';
+import { RolesGuard } from '../enums/roles.guard';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -22,6 +22,11 @@ export class UsersController {
   @Post()
   create(@Body() body: any) {
     return this.usersService.create(body);
+  }
+  
+  @Get('unsubscribe/:token')
+  unsubscribe(@Param('token') token: string) {
+    return this.usersService.unsubscribe(token);
   }
 
   @UseGuards(AuthGuard, RolesGuard)

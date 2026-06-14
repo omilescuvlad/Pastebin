@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UsersService {
@@ -13,16 +14,21 @@ export class UsersService {
 
   // CREATE
   async create(body: any): Promise<User> {
-    const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(body.password, salt);
-    const user = this.usersRepository.create({
-      fullName: body.fullName,
-      username: body.username,
-      password: hash,
-      email: body.email,
-    });
+  const salt = await bcrypt.genSalt();
+  const hash = await bcrypt.hash(body.password, salt);
 
-    return this.usersRepository.save(user);
+  const user = this.usersRepository.create({
+    fullName: body.fullName,
+    username: body.username,
+    password: hash,
+    email: body.email,
+    emailNotifications: true,
+    unsubscribeToken: randomUUID(),
+  });
+
+  
+
+  return this.usersRepository.save(user);
   }
 
   // READ ALL
@@ -82,5 +88,24 @@ export class UsersService {
     return {
       message: `User with id ${id} was deleted successfully`,
     };
+  }
+
+  //UNSUBSCRIBE
+  async unsubscribe(token: string) {
+  const user = await this.usersRepository.findOne({
+    where: { unsubscribeToken: token },
+  });
+
+  if (!user) {
+    throw new NotFoundException('Invalid unsubscribe token');
+  }
+
+  user.emailNotifications = false;
+
+  await this.usersRepository.save(user);
+
+  return {
+    message: 'You have successfully unsubscribed from email notifications',
+  };
   }
 }

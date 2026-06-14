@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Paste } from '../paste/paste.entity';
-import { Role } from 'src/enums/role.enum';
+import { Role } from '../enums/role.enum';
 
 @Entity()
 export class User {
@@ -28,4 +28,10 @@ export class User {
     default: [Role.User],
   })
   roles: Role[];
+
+  @Column({ default: true })
+  emailNotifications: boolean;
+
+  @Column({ nullable: true })
+  unsubscribeToken: string;
 }
