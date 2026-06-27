@@ -8,18 +8,23 @@ import { Paste } from './paste/paste.entity';
 import { PastesModule } from './paste/paste.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import * as dotenv from 'dotenv';
 import { RolesGuard } from './enums/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
-
-//dotenv
-dotenv.config({ path: '.env' });
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 //database connection
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -39,6 +44,10 @@ dotenv.config({ path: '.env' });
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
