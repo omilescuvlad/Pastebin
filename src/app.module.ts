@@ -13,6 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 //database connection
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,11 +29,11 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST,
+      host: process.env.DATABASE_HOST || 'localhost',
       port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      username: process.env.DATABASE_USER || 'postgres',
+      password: process.env.DATABASE_PASS || 'admin',
+      database: process.env.DATABASE_NAME || 'pastebin',
       entities: [User, Paste],
       synchronize: true,
       autoLoadEntities: true,
