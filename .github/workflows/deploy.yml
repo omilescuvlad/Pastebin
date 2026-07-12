@@ -11,7 +11,7 @@ env:
   REPO_NAME: pastebin-repo
   IMAGE_NAME: pastebin-app
   SERVICE_NAME: pastebin-server
-  INSTANCE_CONNECTION_NAME: gen-lang-client-0790483195:europe-west3:pastebin-db
+  INSTANCE_CONNECTION_NAME: ${{ secrets.INSTANCE_CONNECTION_NAME }}
 
 jobs:
   deploy:
