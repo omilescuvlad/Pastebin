@@ -96,6 +96,7 @@
     "@nestjs/core@11.1.19": true,
     "bcrypt@6.0.0": true,
     "postgresql@0.0.1": true,
-    "unrs-resolver@1.11.1": true
+    "unrs-resolver@1.11.1": true,
+    "@scarf/scarf@1.4.0": true
   }
 }
