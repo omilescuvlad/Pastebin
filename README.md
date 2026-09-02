@@ -146,8 +146,6 @@ DATABASE_PASS=admin
 DATABASE_NAME=pastebin
 ```
 
-> Do not commit real secrets or email credentials to the repository.
-
 ## Running with Docker
 
 Build and start the API and PostgreSQL database:
@@ -580,10 +578,6 @@ The project includes several security-related mechanisms:
 - Global request rate limiting
 - Environment variables for application secrets
 - Unique unsubscribe tokens for email preferences
-
-## License
-
-This project is currently marked as **UNLICENSED**.
 
 ## Author
 
