@@ -11,6 +11,7 @@ import {
   StreamableFile,
   Res,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PastesService } from './paste.service';
 import { Roles } from '../enums/roles.decorator';
 import { Role } from '../enums/role.enum';
@@ -20,6 +21,7 @@ import type { Response } from 'express';
 import { CreatePasteDto } from './dto/create-paste.dto';
 import { UpdatePasteDto } from './dto/update-paste.dto';
 
+@ApiTags('Pastes')
 @Controller('pastes')
 export class PastesController {
   constructor(private readonly pastesService: PastesService) {}
@@ -32,6 +34,7 @@ export class PastesController {
 
   // READ all pastes
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Get()
   @Roles(Role.Admin)
   findAll() {
@@ -40,6 +43,7 @@ export class PastesController {
 
   // UPDATE paste by id
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Put(':id')
   @Roles(Role.Admin, Role.User)
   update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdatePasteDto) {
@@ -48,6 +52,7 @@ export class PastesController {
 
   // DELETE paste by id
   @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   @Roles(Role.Admin, Role.User)
   remove(@Param('id', ParseIntPipe) id: number) {

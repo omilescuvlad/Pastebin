@@ -19,9 +19,9 @@ jobs:
       DATABASE_HOST: localhost
       DATABASE_PORT: 5432
       DATABASE_USER: postgres
-      DATABASE_PASS: ${{ secrets.CI_DATABASE_PASS }}
+      DATABASE_PASS: pastebin_ci_password
       DATABASE_NAME: pastebin
-      JWT_SECRET_KEY: ${{ secrets.CI_JWT_SECRET_KEY }}
+      JWT_SECRET_KEY: pastebin-ci-jwt-secret
       ROLES_KEY: roles
 
     services:
@@ -29,7 +29,7 @@ jobs:
         image: postgres:16-alpine
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ${{ secrets.CI_DATABASE_PASS }}
+          POSTGRES_PASSWORD: pastebin_ci_password
           POSTGRES_DB: pastebin
         ports:
           - 5432:5432
@@ -55,8 +55,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
-      - name: Run unit tests
-        run: npm test
+      - name: Run unit tests with coverage
+        run: npm run test:cov -- --runInBand
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e -- --runInBand
 
       - name: Build project
         run: npm run build
