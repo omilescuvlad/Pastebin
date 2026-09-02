@@ -1,40 +1,58 @@
 # Secure Text Sharing Platform
 
+[![CI](https://github.com/omilescuvlad/Secure-Text-Sharing-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/omilescuvlad/Secure-Text-Sharing-Platform/actions/workflows/ci.yml)
+[![Docker Build](https://github.com/omilescuvlad/Secure-Text-Sharing-Platform/actions/workflows/docker.yml/badge.svg)](https://github.com/omilescuvlad/Secure-Text-Sharing-Platform/actions/workflows/docker.yml)
+
 A backend API for creating, managing, and sharing text pastes.
 
 The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **TypeORM**, and includes JWT authentication, role-based authorization, email notifications, rate limiting, and Docker support.
 
 ## Features
 
-* User registration
-* Password hashing with bcrypt
-* JWT authentication
-* User and Admin roles
-* Role-based access control
-* Create, update, and delete text pastes
-* Download pastes as `.txt` files
-* Email notification when a paste is created
-* Paste attached directly to notification emails
-* Email unsubscribe functionality
-* PostgreSQL database with TypeORM
-* Request rate limiting
-* Docker and Docker Compose support
-* Unit and end-to-end testing with Jest
+- User registration
+- Password hashing with bcrypt
+- JWT authentication
+- User and Admin roles
+- Role-based access control
+- Create, update, and delete text pastes
+- Download pastes as `.txt` files
+- Email notification when a paste is created
+- Paste attached directly to notification emails
+- Email unsubscribe functionality
+- PostgreSQL database with TypeORM
+- Request rate limiting
+- Docker and Docker Compose support
+- Unit and end-to-end testing with Jest
+- Interactive Swagger/OpenAPI documentation
+- GitHub Actions CI/CD with gated QA and production deployments
 
 ## Tech Stack
 
-* **NestJS**
-* **TypeScript**
-* **Node.js**
-* **PostgreSQL**
-* **TypeORM**
-* **JWT**
-* **bcrypt**
-* **Nodemailer**
-* **NestJS Throttler**
-* **Docker**
-* **Docker Compose**
-* **Jest**
+- **NestJS**
+- **TypeScript**
+- **Node.js**
+- **PostgreSQL**
+- **TypeORM**
+- **JWT**
+- **bcrypt**
+- **Nodemailer**
+- **NestJS Throttler**
+- **Docker**
+- **Docker Compose**
+- **Jest**
+- **Swagger / OpenAPI**
+- **GitHub Actions**
+- **Google Cloud Run, Cloud SQL, and Artifact Registry**
+
+## Architecture
+
+```mermaid
+flowchart TD
+    Client[API client] --> API[NestJS REST API]
+    API --> Security[JWT, RBAC, rate limiting]
+    API --> Database[(PostgreSQL)]
+    API --> Mail[SMTP email service]
+```
 
 ## Project Structure
 
@@ -79,15 +97,15 @@ src/
 
 To run the project using Docker, you need:
 
-* Git
-* Docker
-* Docker Compose
+- Git
+- Docker
+- Docker Compose
 
 For local development without Docker:
 
-* Node.js
-* npm
-* PostgreSQL
+- Node.js
+- npm
+- PostgreSQL
 
 ## Installation
 
@@ -142,6 +160,12 @@ The API will be available at:
 
 ```text
 http://localhost:3000
+```
+
+Interactive Swagger documentation will be available at:
+
+```text
+http://localhost:3000/api
 ```
 
 PostgreSQL will be available on:
@@ -328,10 +352,10 @@ Content-Type: application/json
 
 When a paste is created, the associated user can receive an email containing:
 
-* The paste content
-* A download link
-* The paste as a `.txt` attachment
-* An unsubscribe link
+- The paste content
+- A download link
+- The paste as a `.txt` attachment
+- An unsubscribe link
 
 ### Get All Pastes
 
@@ -401,6 +425,25 @@ The current global limit is:
 
 Requests exceeding this limit will be rejected by the throttler guard.
 
+## Health Check
+
+The API exposes a database-aware readiness endpoint:
+
+```http
+GET /health
+```
+
+A healthy application returns:
+
+```json
+{
+  "status": "ok",
+  "database": "up"
+}
+```
+
+If PostgreSQL cannot be reached, the endpoint returns HTTP `503 Service Unavailable`.
+
 ## Database
 
 The application uses **PostgreSQL** with **TypeORM**.
@@ -469,22 +512,37 @@ Run unit tests:
 npm test
 ```
 
+Run unit tests with coverage and enforce the global coverage threshold:
+
+```bash
+npm run test:cov
+```
+
+Run PostgreSQL-backed end-to-end tests:
+
+```bash
+npm run test:e2e
+```
+
 Run tests in watch mode:
 
 ```bash
 npm run test:watch
 ```
 
-Run test coverage:
+## CI/CD
 
-```bash
-npm run test:cov
-```
+Pull requests and pushes to `main` run ESLint, unit tests with coverage, PostgreSQL-backed end-to-end tests, and a production build. Jest measures the service and guard layer, enforcing minimum coverage thresholds of **85% for statements, functions, and lines** and **70% for branches**.
 
-Run end-to-end tests:
+After CI succeeds on a push to `main`, the deployment workflow builds the exact validated commit, pushes its Docker image to Google Artifact Registry, deploys QA, and then deploys production. Manual QA or production deployments run the same validation gate first.
 
-```bash
-npm run test:e2e
+```mermaid
+flowchart TD
+    GitHub[Push to main] --> CI[Lint, tests, build]
+    CI --> Image[Docker image]
+    Image --> Registry[Artifact Registry]
+    Registry --> QA[Cloud Run QA]
+    QA --> Production[Cloud Run production]
 ```
 
 ## Docker Services
@@ -515,13 +573,13 @@ Uses the `postgres:16-alpine` Docker image and stores database data in a persist
 
 The project includes several security-related mechanisms:
 
-* Password hashing using bcrypt
-* JWT-based authentication
-* Role-based authorization
-* Protected API routes using guards
-* Global request rate limiting
-* Environment variables for application secrets
-* Unique unsubscribe tokens for email preferences
+- Password hashing using bcrypt
+- JWT-based authentication
+- Role-based authorization
+- Protected API routes using guards
+- Global request rate limiting
+- Environment variables for application secrets
+- Unique unsubscribe tokens for email preferences
 
 ## License
 
