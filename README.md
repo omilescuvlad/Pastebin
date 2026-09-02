@@ -5,7 +5,7 @@
 
 A backend API for creating, managing, and sharing text pastes.
 
-The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **TypeORM**, and includes JWT authentication, role-based authorization, email notifications, rate limiting, and Docker support.
+The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **TypeORM**, and includes JWT authentication, role-based authorization, email notifications, rate limiting, database-aware health monitoring, and Docker support.
 
 ## Features
 
@@ -20,11 +20,12 @@ The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **
 - Paste attached directly to notification emails
 - Email unsubscribe functionality
 - PostgreSQL database with TypeORM
+- Database-aware health check for API and PostgreSQL readiness
 - Request rate limiting
 - Docker and Docker Compose support
 - Unit and end-to-end testing with Jest
 - Interactive Swagger/OpenAPI documentation
-- GitHub Actions CI/CD with gated QA and production deployments
+- GitHub Actions CI/CD with automated QA and production deployments
 
 ## Tech Stack
 
@@ -168,6 +169,12 @@ Interactive Swagger documentation will be available at:
 http://localhost:3000/api
 ```
 
+The API and database health endpoint will be available at:
+
+```text
+http://localhost:3000/health
+```
+
 PostgreSQL will be available on:
 
 ```text
@@ -184,6 +191,28 @@ To also remove the database volume:
 
 ```bash
 docker compose down -v
+```
+
+## Health Check
+
+`GET /health` verifies that the API is running and can execute a query against PostgreSQL.
+
+A healthy application returns `200 OK`:
+
+```json
+{
+  "status": "ok",
+  "database": "up"
+}
+```
+
+If PostgreSQL becomes unavailable while the application is running, the endpoint returns `503 Service Unavailable`:
+
+```json
+{
+  "status": "error",
+  "database": "down"
+}
 ```
 
 ## Running Locally
