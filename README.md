@@ -24,7 +24,6 @@ The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **
 - Request rate limiting
 - Docker and Docker Compose support
 - Unit and end-to-end testing with Jest
-- Interactive Swagger/OpenAPI documentation
 - GitHub Actions CI/CD with automated QA and production deployments
 
 ## Tech Stack
@@ -41,7 +40,6 @@ The application is built with **NestJS**, **TypeScript**, **PostgreSQL**, and **
 - **Docker**
 - **Docker Compose**
 - **Jest**
-- **Swagger / OpenAPI**
 - **GitHub Actions**
 - **Google Cloud Run, Cloud SQL, and Artifact Registry**
 
@@ -488,8 +486,6 @@ Stores user information, authentication data, roles, email preferences, and the 
 Stores the text content and its relationship with the user who created it.
 
 TypeORM automatically synchronizes the database schema when the application starts.
-
-> `synchronize: true` is convenient during development but should normally be replaced by migrations in a production environment.
 
 ## Available Scripts
 
